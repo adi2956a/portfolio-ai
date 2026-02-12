@@ -14,9 +14,19 @@ import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 dotenv.config();
 
 const app = express();
+const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_ORIGIN].filter(Boolean);
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 app.use(
