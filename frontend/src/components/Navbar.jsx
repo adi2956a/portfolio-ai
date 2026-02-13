@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Globe, Linkedin, Mail, Plus, X } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -7,9 +7,25 @@ import { useAuth } from "../hooks/useAuth.jsx";
 export default function Navbar() {
   const [adminMode, setAdminMode] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { isAuthenticated, logout } = useAuth();
 
-  const expanded = isHovered || adminMode;
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const expanded = isHovered || adminMode || isScrolled;
+
+  const handleProfileClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const profileImage = (
     <img
       src="/profile-shubham.jpeg"
@@ -36,7 +52,12 @@ export default function Navbar() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <div className="floating-nav-head">
-          <Link to="/" className={expanded ? "dock-profile expanded" : "dock-btn"} aria-label="Go to home">
+          <Link
+            to="/"
+            className={expanded ? "dock-profile expanded" : "dock-btn"}
+            aria-label="Go to home"
+            onClick={handleProfileClick}
+          >
             {expanded ? (
               <>
                 {profileImage}
