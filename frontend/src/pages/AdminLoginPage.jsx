@@ -36,6 +36,7 @@ export default function AdminLoginPage() {
           required
         />
         <button type="submit">Login</button>
+        <button type="button" onClick={() => navigate(-1)}>Go Back</button>
       </form>
       {error ? <p>{error}</p> : null}
     </section>

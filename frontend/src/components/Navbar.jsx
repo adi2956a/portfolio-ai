@@ -53,7 +53,10 @@ export default function Navbar() {
             <div className="dock-mid-links">
               {adminMode ? (
                 isAuthenticated ? (
-                  <button type="button" className="dock-mid-action" onClick={logout}>Logout</button>
+                  <>
+                    <Link className="dock-mid-action-link" to="/admin">Admin Page</Link>
+                    <button type="button" className="dock-mid-action" onClick={logout}>Logout</button>
+                  </>
                 ) : (
                   <Link className="dock-mid-action-link" to="/admin/login">Admin Login</Link>
                 )
